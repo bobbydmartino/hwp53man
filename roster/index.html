@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>53 Man Roster Tournament</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { padding: 2rem; }
+    .player-list, .slot-list { max-height: 80vh; overflow-y: auto; }
+    .player, .slot { padding: 0.5rem; margin: 0.2rem; border: 1px solid #ccc; border-radius: 4px; background: #f8f9fa; cursor: move; }
+    .slot { min-width: 100px; min-height: 2rem; background: #e9ecef; }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <header class="mb-4 text-center">
+      <h1>HwP 53 Man Roster Tournament</h1>
+      <p>Pick the initial 53-man roster and 16-player practice squad for the 2025 LA Chargers. Entries accepted until Pop publishes his final‑53 article.</p>
+    </header>
+    <div class="row">
+      <div class="col-md-4 border player-list" id="players">
+        <h4 class="mt-2">Available Players</h4>
+      </div>
+      <div class="col-md-8">
+        <h4>Roster (53)</h4>
+        <div id="roster" class="d-flex flex-wrap border slot-list"></div>
+        <h4 class="mt-4">Practice Squad (16)</h4>
+        <div id="squad" class="d-flex flex-wrap border slot-list"></div>
+        <button id="submitBtn" class="btn btn-primary mt-4">Submit Picks</button>
+      </div>
+    </div>
+    <section id="statsSection" class="mt-5" style="display:none;">
+      <h4>Pick Popularity</h4>
+      <canvas id="statsChart" width="800" height="400"></canvas>
+    </section>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAcb0_7_OfBHsA21Jo2RHbOQptnrex01ig",
+        authDomain: "hwp53man.firebaseapp.com",
+        projectId: "hwp53man",
+        storageBucket: "hwp53man.firebasestorage.app",
+        messagingSenderId: "246740658179",
+        appId: "1:246740658179:web:defac8c24cac9502d40636",
+        measurementId: "G-6QP9VPF8L7"
+    };
+
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Player data
+    const players = [
+      { name: "Justin Herbert", pos: "QB", number: 10 },
+      { name: "Taylor Heinicke", pos: "QB", number: 4 },
+      { name: "Trey Lance", pos: "QB", number: 5 },
+      { name: "DJ Uiagalelelei", pos: "QB", number: 13 },
+      { name: "Rashawn Slater", pos: "T", number: 70 },
+      { name: "Joe Alt", pos: "T", number: 76 },
+      { name: "Mekhi Becton", pos: "G", number: 73 },
+      { name: "Trey Pipkins", pos: "T", number: 79 },
+      { name: "Zion Johnson", pos: "IOL", number: 77 },
+      { name: "Andre James", pos: "IOL", number: 78 },
+      { name: "Bradley Bozeman", pos: "IOL", number: 75 },
+      { name: "Jamaree Salyer", pos: "G", number: 68 },
+      { name: "Branson Taylor", pos: "G", number: 71 },
+      { name: "Karsen Barnhart", pos: "G", number: 61 },
+      { name: "Josh Kaltenberger", pos: "C", number: 63 },
+      { name: "Ryan Nelson", pos: "T", number: 74 },
+      { name: "Nash Jones", pos: "G", number: 62 },
+      { name: "Corey Stewart", pos: "T", number: 65 },
+      { name: "Ladd McConkey", pos: "WR", number: 15 },
+      { name: "Tre' Harris", pos: "WR", number: 9 },
+      { name: "Quentin Johnston", pos: "WR", number: 1 },
+      { name: "Derius Davis", pos: "WR", number: 12 },
+      { name: "Keandre Lambert-Smith", pos: "WR", number: 84 },
+      { name: "Jalen Reagor", pos: "WR", number: 88 },
+      { name: "Luke Grimm", pos: "WR", number: 37 },
+      { name: "Brendan Rice", pos: "WR", number: 82 },
+      { name: "Dez Fitzpatrick", pos: "WR", number: 87 },
+      { name: "Jaylen Johnson", pos: "WR", number: 39 },
+      { name: "Dalevon Campbell", pos: "WR", number: 38 },
+      { name: "JaQue Jackson", pos: "WR", number: 27 },
+      { name: "Omarion Hampton", pos: "RB", number: 8 },
+      { name: "Najee Harris", pos: "RB", number: 22 },
+      { name: "Hassan Haskins", pos: "RB", number: 28 },
+      { name: "Kimani Vidal", pos: "RB", number: 30 },
+      { name: "Nyheim Hines", pos: "RB", number: 31 },
+      { name: "Raheim Sanders", pos: "RB", number: 35 },
+      { name: "Jaret Patterson", pos: "RB", number: 34 },
+      { name: "Will Dissly", pos: "TE", number: 89 },
+      { name: "Tyler Conklin", pos: "TE", number: 83 },
+      { name: "Orade Gadsden II", pos: "TE", number: 86 },
+      { name: "Tucker Fisk", pos: "TE", number: 42 },
+      { name: "Stevo Klotz", pos: "TE", number: 41 },
+      { name: "McCallan Castles", pos: "TE", number: 46 },
+      { name: "Cam Dicker", pos: "K", number: 11 },
+      { name: "Josh Harris", pos: "LS", number: 47 },
+      { name: "J.K. Scott", pos: "P", number: 16 },
+      { name: "Teair Tart", pos: "DL", number: 90 },
+      { name: "Da'Shawn Hand", pos: "DL", number: 91 },
+      { name: "Jamaree Caldwell", pos: "DL", number: 99 },
+      { name: "Naquon Jones", pos: "DL", number: 96 },
+      { name: "Scott Matlock", pos: "DL", number: 44 },
+      { name: "Otito Ogbonnia", pos: "DL", number: 93 },
+      { name: "Justin Eboigbe", pos: "DL", number: 92 },
+      { name: "Christopher Hinton", pos: "DL", number: 98 },
+      { name: "TeRah Edwards", pos: "DL", number: 94 },
+      { name: "Josh Fuga", pos: "DL", number: 69 },
+      { name: "Khalil Mack", pos: "OLB", number: 52 },
+      { name: "Tuli Tuipulotu", pos: "OLB", number: 45 },
+      { name: "Bud Dupree", pos: "OLB", number: 48 },
+      { name: "Kyle Kennard", pos: "OLB", number: 54 },
+      { name: "Tremon Morris-Brash", pos: "OLB", number: 57 },
+      { name: "Kylan Guidry", pos: "OLB", number: 59 },
+      { name: "Garmon Randolph", pos: "OLB", number: 97 },
+      { name: "Caleb Murphy", pos: "OLB", number: 50 },
+      { name: "Daiyan Henley", pos: "ILB", number: 0 },
+      { name: "Denzel Perryman", pos: "ILB", number: 6 },
+      { name: "Troy Dye", pos: "ILB", number: 43 },
+      { name: "Junior Colson", pos: "ILB", number: 25 },
+      { name: "Del'Shawn Phillips", pos: "ILB", number: 53 },
+      { name: "Marlowe Wax", pos: "ILB", number: 58 },
+      { name: "Kana'i Mauga", pos: "ILB", number: 56 },
+      { name: "Tarheeb Still", pos: "CB", number: 29 },
+      { name: "Cam Hart", pos: "CB", number: 20 },
+      { name: "Donte Jackson", pos: "CB", number: 26 },
+      { name: "Benjamin St.-Juste", pos: "CB", number: 24 },
+      { name: "Ja'Sir Taylor", pos: "CB", number: 36 },
+      { name: "Deane Leonard", pos: "CB", number: 33 },
+      { name: "Trikweze Bridges", pos: "CB", number: 31 },
+      { name: "Nikko Reed", pos: "CB", number: 46 },
+      { name: "Myles Purchase", pos: "CB", number: 49 },
+      { name: "Jordan Oladokun", pos: "CB", number: 37 },
+      { name: "Eric Rogers", pos: "CB", number: 39 },
+      { name: "Derwin James", pos: "S", number: 3 },
+      { name: "Elijah Molden", pos: "S", number: 2 },
+      { name: "Alohi Gilman", pos: "S", number: 3 },
+      { name: "R.J. Mickens", pos: "S", number: 27 },
+      { name: "Tony Jefferson", pos: "S", number: 23 },
+      { name: "Kendall Williamson", pos: "S", number: 40 },
+      { name: "Emany Johnson", pos: "S", number: 38 },
+      { name: "Jaylen Jones", pos: "S", number: 35 }
+    ];
+
+    function init() {
+      const playersDiv = document.getElementById('players');
+      players.forEach((p,i) => {
+        const d = document.createElement('div');
+        d.className='player'; d.draggable=true;
+        d.textContent = `${p.name} (${p.pos}) #${p.number}`;
+        d.dataset.idx=i;
+        d.addEventListener('dragstart', dragStart);
+        playersDiv.append(d);
+      });
+      createSlots('roster',53);
+      createSlots('squad',16);
+    }
+    function createSlots(id,n){
+      const c=document.getElementById(id);
+      for(let i=0;i<n;i++){
+        const s=document.createElement('div');
+        s.className='slot'; s.dataset.target=id;
+        s.addEventListener('dragover',dragOver);
+        s.addEventListener('drop',drop);
+        c.append(s);
+      }
+    }
+    let dragIdx;
+    function dragStart(e){ dragIdx=e.target.dataset.idx; }
+    function dragOver(e){ e.preventDefault(); }
+    function drop(e){
+      const tgt=e.currentTarget;
+      const type=tgt.dataset.target;
+      const max = type==='roster'?53:16;
+      const filled = document.querySelectorAll(`#${type} .slot:has(*)`).length;
+      if(filled>=max && !tgt.hasChildNodes()){ alert('Max '+max+' reached'); return;}      
+      if(!tgt.hasChildNodes()){
+        const clone = document.querySelector(`.player[data-idx='${dragIdx}']`).cloneNode(true);
+        clone.draggable=false;
+        tgt.append(clone);
+      }
+    }
+    function submitPicks(){
+      const name=prompt('Name or handle:'); if(!name) return;
+      const roster = Array.from(document.querySelectorAll('#roster .slot div')).map(d=>d.textContent);
+      const squad = Array.from(document.querySelectorAll('#squad .slot div')).map(d=>d.textContent);
+      if(roster.length!==53||squad.length!==16){ alert('Fill exactly 53 roster & 16 squad'); return; }
+      db.collection('submissions').add({name,date:new Date(),roster,squad}).then(()=>alert('Saved!'));
+    }
+    document.addEventListener('DOMContentLoaded',init);
+    document.getElementById('submitBtn').addEventListener('click',submitPicks);
+
+    // Stats view
+    function loadStats(){
+      db.collection('submissions').get().then(snap=>{
+        const counts={};
+        snap.forEach(doc=>{
+          const d=doc.data();
+          [...d.roster,...d.squad].forEach(n=>counts[n]=(counts[n]||0)+1);
+        });
+        const labels=Object.keys(counts), data=labels.map(l=>counts[l]);
+        new Chart(document.getElementById('statsChart'),{type:'bar',data:{labels,datasets:[{label:'Picks',data}]} });
+      });
+    }
+    if(location.hash==='#stats'){ document.getElementById('statsSection').style.display='block'; loadStats(); }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
