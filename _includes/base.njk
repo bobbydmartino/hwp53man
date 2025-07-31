@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title or "My Blog" }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ '/style.css' | url }}">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{{ '/' | url }}">Home</a> |
+      <a href="{{ '/posts/' | url }}">Posts</a>
+    </nav>
+  </header>
+
+  <main>
+    {{ content | safe }}
+  </main>
+
+  <script>
+    document.write(`<p>&copy; ${new Date().getFullYear()} Me</p>`);
+  </script>
+</body>
+</html>
