@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,34 +7,45 @@
   <title>53 Man Roster Tournament</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body { padding: 2rem; }
-    .player-list, .slot-list { max-height: 80vh; overflow-y: auto; }
-    .player, .slot { padding: 0.5rem; margin: 0.2rem; border: 1px solid #ccc; border-radius: 4px; background: #f8f9fa; cursor: move; }
-    .slot { min-width: 100px; min-height: 2rem; background: #e9ecef; }
+    body { padding: 1rem; }
+    .group-card { min-width: 180px; margin: 0.5rem; }
+    .player-list, .group-card { max-height: 80vh; overflow-y: auto; }
+    .list-group-item { cursor: pointer; }
+    #available .list-group-item:hover { background: #eef; }
   </style>
 </head>
 <body>
   <div class="container-fluid">
-    <header class="mb-4 text-center">
+    <header class="text-center mb-4">
       <h1>HwP 53 Man Roster Tournament</h1>
-      <p>Pick the initial 53-man roster and 16-player practice squad for the 2025 LA Chargers. Entries accepted until Pop publishes his final‑53 article.</p>
+      <p>Pick the initial 53-man roster and 16-player practice squad for the 2025 LA Chargers.</p>
     </header>
     <div class="row">
-      <div class="col-md-4 border player-list" id="players">
-        <h4 class="mt-2">Available Players</h4>
+      <div class="col-md-4">
+        <h5>Available Players</h5>
+        <div id="available" class="d-flex flex-wrap player-list"></div>
       </div>
       <div class="col-md-8">
-        <h4>Roster (53)</h4>
-        <div id="roster" class="d-flex flex-wrap border slot-list"></div>
-        <h4 class="mt-4">Practice Squad (16)</h4>
-        <div id="squad" class="d-flex flex-wrap border slot-list"></div>
-        <button id="submitBtn" class="btn btn-primary mt-4">Submit Picks</button>
+        <ul class="nav nav-tabs mb-3" id="selectionTabs">
+          <li class="nav-item">
+            <button class="nav-link active" data-section="roster">Roster (53)</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-section="squad">Practice Squad (16)</button>
+          </li>
+        </ul>
+
+        <div id="roster-groups" class="d-flex flex-wrap"></div>
+        <div id="squad-groups" class="d-none d-flex flex-wrap"></div>
+
+        <button id="submitBtn" class="btn btn-primary mt-3">Submit Picks</button>
+
+        <section id="statsSection" class="mt-5" style="display:none;">
+          <h5>Pick Popularity</h5>
+          <canvas id="statsChart" width="800" height="400"></canvas>
+        </section>
       </div>
     </div>
-    <section id="statsSection" class="mt-5" style="display:none;">
-      <h4>Pick Popularity</h4>
-      <canvas id="statsChart" width="800" height="400"></canvas>
-    </section>
   </div>
 
   <!-- Firebase -->
@@ -42,21 +54,20 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
+    // config
     const firebaseConfig = {
-        apiKey: "AIzaSyAcb0_7_OfBHsA21Jo2RHbOQptnrex01ig",
-        authDomain: "hwp53man.firebaseapp.com",
-        projectId: "hwp53man",
-        storageBucket: "hwp53man.firebasestorage.app",
-        messagingSenderId: "246740658179",
-        appId: "1:246740658179:web:defac8c24cac9502d40636",
-        measurementId: "G-6QP9VPF8L7"
+      apiKey: "AIzaSyAcb0_7_OfBHsA21Jo2RHbOQptnrex01ig",
+      authDomain: "hwp53man.firebaseapp.com",
+      projectId: "hwp53man",
+      storageBucket: "hwp53man.firebasestorage.app",
+      messagingSenderId: "246740658179",
+      appId: "1:246740658179:web:defac8c24cac9502d40636",
+      measurementId: "G-6QP9VPF8L7"
     };
-
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Player data
+    // data
     const players = [
       { name: "Justin Herbert", pos: "QB", number: 10 },
       { name: "Taylor Heinicke", pos: "QB", number: 4 },
@@ -149,69 +160,184 @@
       { name: "Emany Johnson", pos: "S", number: 38 },
       { name: "Jaylen Jones", pos: "S", number: 35 }
     ];
+    const positions   = ['QB','RB','TE','WR','OL','ST','DL','OLB','ILB','CB','S'];
+    const rosterLimits = { QB:5, RB:5, TE:5, WR:8, OL:17, ST:3, DL:9, OLB:6, ILB:7, CB:8, S:9 };
 
-    function init() {
-      const playersDiv = document.getElementById('players');
-      players.forEach((p,i) => {
-        const d = document.createElement('div');
-        d.className='player'; d.draggable=true;
-        d.textContent = `${p.name} (${p.pos}) #${p.number}`;
-        d.dataset.idx=i;
-        d.addEventListener('dragstart', dragStart);
-        playersDiv.append(d);
-      });
-      createSlots('roster',53);
-      createSlots('squad',16);
-    }
-    function createSlots(id,n){
-      const c=document.getElementById(id);
-      for(let i=0;i<n;i++){
-        const s=document.createElement('div');
-        s.className='slot'; s.dataset.target=id;
-        s.addEventListener('dragover',dragOver);
-        s.addEventListener('drop',drop);
-        c.append(s);
-      }
-    }
-    let dragIdx;
-    function dragStart(e){ dragIdx=e.target.dataset.idx; }
-    function dragOver(e){ e.preventDefault(); }
-    function drop(e){
-      const tgt=e.currentTarget;
-      const type=tgt.dataset.target;
-      const max = type==='roster'?53:16;
-      const filled = document.querySelectorAll(`#${type} .slot:has(*)`).length;
-      if(filled>=max && !tgt.hasChildNodes()){ alert('Max '+max+' reached'); return;}      
-      if(!tgt.hasChildNodes()){
-        const clone = document.querySelector(`.player[data-idx='${dragIdx}']`).cloneNode(true);
-        clone.draggable=false;
-        tgt.append(clone);
-      }
-    }
-    function submitPicks(){
-      const name=prompt('Name or handle:'); if(!name) return;
-      const roster = Array.from(document.querySelectorAll('#roster .slot div')).map(d=>d.textContent);
-      const squad = Array.from(document.querySelectorAll('#squad .slot div')).map(d=>d.textContent);
-      if(roster.length!==53||squad.length!==16){ alert('Fill exactly 53 roster & 16 squad'); return; }
-      db.collection('submissions').add({name,date:new Date(),roster,squad}).then(()=>alert('Saved!'));
-    }
-    document.addEventListener('DOMContentLoaded',init);
-    document.getElementById('submitBtn').addEventListener('click',submitPicks);
+    let picked = { roster: {}, squad: [] };
+    let currentSection = 'roster';
 
-    // Stats view
-    function loadStats(){
-      db.collection('submissions').get().then(snap=>{
-        const counts={};
-        snap.forEach(doc=>{
-          const d=doc.data();
-          [...d.roster,...d.squad].forEach(n=>counts[n]=(counts[n]||0)+1);
+    // init
+    document.addEventListener('DOMContentLoaded', () => {
+      positions.forEach(pos => picked.roster[pos]=[]);
+      setupTabs();
+      renderAll();
+      document.getElementById('submitBtn').addEventListener('click', submitPicks);
+      if (location.hash === '#stats') {
+        document.getElementById('statsSection').style.display = 'block';
+        loadStats();
+      }
+    });
+
+    function setupTabs() {
+      document.querySelectorAll('#selectionTabs .nav-link')
+        .forEach(btn => btn.addEventListener('click', () => {
+          document.querySelectorAll('#selectionTabs .nav-link').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          currentSection = btn.dataset.section;
+          document.getElementById('roster-groups').classList.toggle('d-none', currentSection!=='roster');
+          document.getElementById('squad-groups').classList.toggle('d-none', currentSection!=='squad');
+        }));
+    }
+
+    function renderAll() {
+      renderAvailable();
+      renderRoster();
+      renderSquad();
+    }
+
+    function renderAvailable() {
+      const used = new Set([
+        ...Object.values(picked.roster).flat(),
+        ...picked.squad
+      ]);
+      const container = document.getElementById('available');
+      container.innerHTML = '';
+      positions.forEach(pos => {
+        const avail = players
+          .map((p,i)=>({...p,i}))
+          .filter(p=>p.pos===pos || (pos==='ST'&&['K','P','LS'].includes(p.pos)) || (pos==='OL'&&['T','G','C','IOL'].includes(p.pos)))
+          .filter(p=>!used.has(p.i));
+        if (!avail.length) return;
+        const card = document.createElement('div');
+        card.className = 'group-card border';
+        const h = document.createElement('h6');
+        h.textContent = pos;
+        card.append(h);
+        const ul = document.createElement('ul');
+        ul.className = 'list-group';
+        avail.forEach(p => {
+          const li = document.createElement('li');
+          li.className = 'list-group-item';
+          li.textContent = `${p.name} #${p.number}`;
+          li.dataset.idx = p.i;
+          li.addEventListener('click', selectPlayer);
+          ul.append(li);
         });
-        const labels=Object.keys(counts), data=labels.map(l=>counts[l]);
-        new Chart(document.getElementById('statsChart'),{type:'bar',data:{labels,datasets:[{label:'Picks',data}]} });
+        card.append(ul);
+        container.append(card);
       });
     }
-    if(location.hash==='#stats'){ document.getElementById('statsSection').style.display='block'; loadStats(); }
+
+    function renderRoster() {
+      const container = document.getElementById('roster-groups');
+      container.innerHTML = '';
+      positions.forEach(pos => {
+        const card = document.createElement('div');
+        card.className = 'group-card border';
+        const cnt = picked.roster[pos].length;
+        const h = document.createElement('h6');
+        h.textContent = `${pos} (${cnt}/${rosterLimits[pos]})`;
+        card.append(h);
+        const ul = document.createElement('ul');
+        ul.className = 'list-group';
+        picked.roster[pos].forEach(idx => {
+          const p = players[idx];
+          const li = document.createElement('li');
+          li.className = 'list-group-item list-group-item-primary';
+          li.textContent = `${p.name} #${p.number}`;
+          li.dataset.idx = idx;
+          li.dataset.section = 'roster';
+          li.addEventListener('click', () => unselectPlayer(idx,'roster'));
+          ul.append(li);
+        });
+        card.append(ul);
+        container.append(card);
+      });
+    }
+
+    function renderSquad() {
+      const container = document.getElementById('squad-groups');
+      container.innerHTML = '';
+      const card = document.createElement('div');
+      card.className = 'group-card border';
+      const cnt = picked.squad.length;
+      const h = document.createElement('h6');
+      h.textContent = `Practice Squad (${cnt}/16)`;
+      card.append(h);
+      const ul = document.createElement('ul');
+      ul.className = 'list-group';
+      picked.squad.forEach(idx => {
+        const p = players[idx];
+        const li = document.createElement('li');
+        li.className = 'list-group-item list-group-item-secondary';
+        li.textContent = `${p.name} (${p.pos}) #${p.number}`;
+        li.dataset.idx = idx;
+        li.dataset.section = 'squad';
+        li.addEventListener('click', () => unselectPlayer(idx,'squad'));
+        ul.append(li);
+      });
+      card.append(ul);
+      container.append(card);
+    }
+
+    function selectPlayer(e) {
+      const idx = +e.currentTarget.dataset.idx;
+      const pos = players[idx].pos;
+      if (currentSection === 'roster') {
+        const total = Object.values(picked.roster).flat().length;
+        if (total >= 53) { alert('Roster full'); return; }
+        if (picked.roster[pos].length >= rosterLimits[pos]) {
+          alert(`${pos} spots full`); return;
+        }
+        picked.roster[pos].push(idx);
+      } else {
+        if (picked.squad.length >= 16) { alert('Practice squad full'); return; }
+        picked.squad.push(idx);
+      }
+      renderAll();
+    }
+
+    function unselectPlayer(idx, section) {
+      if (section === 'roster') {
+        const pos = players[idx].pos;
+        picked.roster[pos] = picked.roster[pos].filter(x => x !== idx);
+      } else {
+        picked.squad = picked.squad.filter(x => x !== idx);
+      }
+      renderAll();
+    }
+
+    function submitPicks() {
+      const name = prompt('Name or handle:');
+      if (!name) return;
+      const rosterArr = Object.values(picked.roster).flat().map(i=>players[i].name);
+      if (rosterArr.length !== 53 || picked.squad.length !== 16) {
+        alert('Must pick exactly 53 roster & 16 squad');
+        return;
+      }
+      db.collection('submissions')
+        .add({ name, date: new Date(), roster: rosterArr, squad: picked.squad.map(i=>players[i].name) })
+        .then(()=> alert('Saved!'))
+        .catch(e=> { console.error(e); alert('Error saving—check console'); });
+    }
+
+    function loadStats() {
+      db.collection('submissions').get().then(snap => {
+        const counts = {};
+        snap.forEach(doc => {
+          const d = doc.data();
+          [...d.roster, ...d.squad].forEach(n => counts[n] = (counts[n]||0)+1);
+        });
+        const labels = Object.keys(counts);
+        const data   = labels.map(l=>counts[l]);
+        new Chart(document.getElementById('statsChart'), {
+          type: 'bar',
+          data: { labels, datasets: [{ label: 'Picks', data }] }
+        });
+      });
+    }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+```
