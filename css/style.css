@@ -1,0 +1,223 @@
+:root {
+  --powder-blue: #0085CA;
+  --sunshine-gold: #FFC20E;
+  --dark-blue: #002244;
+  --light-gray: #f8f9fa;
+  --medium-gray: #dee2e6;
+  --roster-color: var(--powder-blue);
+  --squad-color: var(--sunshine-gold);
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--light-gray);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 150px; /* Adjust based on sticky header height */
+}
+
+/* ===== Home View ===== */
+#home-view {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+#home-view::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--powder-blue); /* Dark blue overlay */
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  color: var(--sunshine-gold);
+}
+
+#start-button .bi-arrow-down {
+  transition: transform 0.3s ease-in-out;
+}
+
+#start-button:hover .bi-arrow-down {
+  transform: translateY(5px);
+}
+
+
+/* ===== Selection View ===== */
+#selection-header {
+  background-color: #ffffff;
+  z-index: 1030;
+  padding-top: .5rem;
+}
+
+#position-nav {
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: .5rem;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--powder-blue) var(--light-gray); /* Firefox */
+}
+#position-nav::-webkit-scrollbar {
+  height: 8px;
+}
+#position-nav::-webkit-scrollbar-track {
+  background: var(--light-gray);
+}
+#position-nav::-webkit-scrollbar-thumb {
+  background-color: var(--powder-blue);
+  border-radius: 10px;
+  border: 2px solid var(--light-gray);
+}
+
+#position-nav .nav-link {
+  color: var(--dark-blue);
+  font-weight: 500;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--medium-gray);
+  margin-right: 0.5rem;
+  background-color: #fff;
+}
+
+#position-nav .nav-link.active {
+  background-color: var(--powder-blue);
+  color: #fff;
+  border-color: var(--powder-blue);
+}
+
+.badge.bg-roster {
+    background-color: var(--roster-color) !important;
+}
+
+.badge.bg-squad {
+    background-color: var(--squad-color) !important;
+    color: var(--dark-blue) !important;
+}
+
+.position-group-title {
+  color: var(--dark-blue);
+  border-bottom: 3px solid var(--powder-blue);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.player-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.player-card {
+  border: 2px solid var(--medium-gray);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: #fff;
+}
+
+.player-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.player-card .player-name {
+  font-weight: 700;
+  color: var(--dark-blue);
+}
+
+.player-card .player-info {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* Selection States */
+.player-card.selected-roster {
+  background-color: var(--roster-color);
+  border-color: var(--dark-blue);
+  color: #fff;
+}
+.player-card.selected-roster .player-name,
+.player-card.selected-roster .player-info {
+  color: #fff;
+}
+
+.player-card.selected-squad {
+  background-color: var(--squad-color);
+  border-color: var(--dark-blue);
+  color: var(--dark-blue);
+}
+.player-card.selected-squad .player-name,
+.player-card.selected-squad .player-info {
+  color: var(--dark-blue);
+}
+
+.player-card.is-picked {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--light-gray);
+}
+.player-card.is-picked:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+
+/* ===== Stats View ===== */
+#stats-view h2 {
+    color: var(--dark-blue);
+}
+
+.stats-table {
+    margin-bottom: 2.5rem;
+}
+
+.stats-table th {
+    background-color: var(--dark-blue);
+    color: white;
+}
+.stats-table .position-header {
+    background-color: var(--powder-blue);
+    color: white;
+    font-size: 1.2rem;
+}
+.stats-table .position-header .avg-count {
+    font-weight: 400;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.hero-logo {
+  max-width: 400px; /* Adjust size as needed */
+  height: auto;     /* Maintain aspect ratio */
+  display: block;       /* Allows for centering with margin */
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;   /* Give it slightly rounded corners */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Add a subtle shadow to lift it off the page */
+}
+
+.prize-shirt-img {
+  max-width: 300px;     /* Set a max width for the image */
+  width: 100%;          /* Make it responsive within its container */
+  height: auto;
+  display: block;       /* Allows for centering with margin */
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;   /* Give it slightly rounded corners */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Add a subtle shadow to lift it off the page */
+}
+
+.centered-paragraph {
+  text-align: center;
+}
