@@ -2,15 +2,8 @@
 
 // --- Firebase Configuration ---
 // This remains the same as your original file
-const firebaseConfig = {
-    apiKey: "AIzaSyAcb0_7_OfBHsA21Jo2RHbOQptnrex01ig",
-    authDomain: "hwp53man.firebaseapp.com",
-    projectId: "hwp53man",
-    storageBucket: "hwp53man.firebasestorage.app",
-    messagingSenderId: "246740658179",
-    appId: "1:246740658179:web:defac8c24cac9502d40636",
-    measurementId: "G-6QP9VPF8L7"
-};
+const firebaseConfig = window.firebaseConfig;
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
