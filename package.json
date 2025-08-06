@@ -1,0 +1,10 @@
+{
+  "name": "hwp53man",
+  "scripts": {
+    "build": "ELEVENTY_ENV=production eleventy",
+    "start": "eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

@@ -1,0 +1,16 @@
+# Node
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Eleventy build output
+_site/
+
+# VSCode
+.vscode/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+ondeck/
+monofile.txt
