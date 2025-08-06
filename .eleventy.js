@@ -6,10 +6,10 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("js");
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addGlobalData("env", process.env);
-  // Define a path prefix for production builds only.
-  // When you run `npm start` (eleventy --serve), the prefix will be empty.
-  // When your GitHub Action runs, it should build with a production flag.
-  const pathPrefix = process.env.ELEVENTY_ENV === "production" ? "/" : "/";
+  eleventyConfig.addPassthroughCopy("CNAME");
+
+
+  const pathPrefix = "/";
 
   return {
     dir: {
