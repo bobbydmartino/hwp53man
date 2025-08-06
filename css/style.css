@@ -221,3 +221,112 @@ html {
 .centered-paragraph {
   text-align: center;
 }
+
+
+
+
+
+
+
+
+
+#rules-section {
+  padding: 2rem 1rem;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 34, 68, 0.08);
+  margin-bottom: 3rem;
+  border: 1px solid var(--medium-gray);
+}
+
+.rules-main-title {
+  font-weight: 700;
+  color: var(--dark-blue);
+}
+
+.rules-subtitle {
+  font-weight: 700;
+  color: var(--dark-blue);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--powder-blue);
+}
+
+/* Styling for the numbered list of rules */
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rule-item {
+  display: flex;
+  align-items: flex-start; /* Aligns number to the top of the text */
+  gap: 1rem;
+}
+
+.rule-number {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #fff;
+  background-color: var(--powder-blue);
+  border-radius: 50%; /* Makes it a circle */
+}
+
+.rule-text {
+  padding-top: 5px; /* Vertically aligns text with the number */
+  line-height: 1.6;
+}
+
+/* Styling for the info cards on the right */
+.info-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: var(--light-gray);
+  border-radius: 12px;
+  border: 1px solid var(--medium-gray);
+}
+
+.info-card-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.info-card-title {
+  font-weight: 700;
+  color: var(--dark-blue);
+  margin-bottom: 0.25rem;
+}
+
+.info-card-text {
+  margin-bottom: 0;
+  color: #495057;
+}
+
+/* Special styling for the main prize card */
+.prize-card {
+  background-color: var(--sunshine-gold);
+  border-color: #e6ac00;
+}
+
+.prize-card .info-card-title,
+.prize-card .info-card-text {
+  color: var(--dark-blue);
+}
+
+.prize-icon {
+  transform: translateY(-5px);
+}
+
+.prize-shirt-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 2px solid rgba(0,0,0,0.1);
+}
