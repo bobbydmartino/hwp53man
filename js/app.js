@@ -54,7 +54,6 @@ const players = [
       { name: "Scott Matlock", pos: "FB/DL", number: 44 },
       { name: "Tucker Fisk", pos: "TE", number: 42 },
       { name: "Stevo Klotz", pos: "TE", number: 41 },
-      { name: "McCallan Castles", pos: "TE", number: 46 },
       { name: "Cam Dicker", pos: "K", number: 11 },
       { name: "Josh Harris", pos: "LS", number: 47 },
       { name: "JK Scott", pos: "P", number: 16 },
