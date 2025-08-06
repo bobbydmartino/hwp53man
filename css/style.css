@@ -197,14 +197,33 @@ html {
     opacity: 0.9;
 }
 
-.hero-logo {
-  max-width: 400px; /* Adjust size as needed */
-  height: auto;     /* Maintain aspect ratio */
-  display: block;       /* Allows for centering with margin */
+/* .hero-logo {
+  max-width: 400px; 
+  height: auto;    
+  display: block;       
   margin-left: auto;
   margin-right: auto;
-  border-radius: 8px;   /* Give it slightly rounded corners */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Add a subtle shadow to lift it off the page */
+  border-radius: 8px;   
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+*/
+.logo-frame-container {
+  position: relative; /* Establishes a positioning context for the frame */
+  width: 250px;      /* Set the desired size of the circle */
+  height: 250px;
+  margin: 0 auto 1.5rem auto; /* Center the container and add bottom margin */
+  border-radius: 50%; /* Makes the container a perfect circle */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* A more pronounced shadow for depth */
+  background-color: #fff; /* The white background of the frame */
+  padding: 15px; /* This creates the thickness of the white frame */
+}
+
+/* 2. The logo image itself */
+.hero-logo {
+  display: block;
+  width: 100%;        /* Make the image fill the padded area of the container */
+  height: 100%;
+  /* object-fit: cover;  Ensures the image covers the area without distortion */
+  border-radius: 50%; /* Makes the image circular to match the frame */
 }
 
 .prize-shirt-img {
