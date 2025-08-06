@@ -316,7 +316,7 @@ function submitPicks() {
 
     const data = {
         name,
-        date: new Date(),
+        date: firebase.firestore.FieldValue.serverTimestamp(),
         roster: picked.roster.map(i => players[i].name),
         squad: picked.squad.map(i => players[i].name)
     };
