@@ -45,7 +45,7 @@ const players = [
       { name: "Najee Harris", pos: "RB", number: 22 },
       { name: "Hassan Haskins", pos: "RB", number: 28 },
       { name: "Kimani Vidal", pos: "RB", number: 30 },
-      { name: "Nyheim Hines", pos: "RB", number: 31 },
+      { name: "Nyheim Miller-Hines", pos: "RB", number: 31 },
       { name: "Raheim Sanders", pos: "RB", number: 35 },
       { name: "Jaret Patterson", pos: "RB", number: 34 },
       { name: "Will Dissly", pos: "TE", number: 89 },
