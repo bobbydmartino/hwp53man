@@ -14,7 +14,6 @@ const players = [
       { name: "Taylor Heinicke", pos: "QB", number: 4 },
       { name: "Trey Lance", pos: "QB", number: 5 },
       { name: "DJ Uiagalelei", pos: "QB", number: 7 },
-      { name: "Rashawn Slater", pos: "T", number: 70 },
       { name: "Joe Alt", pos: "T", number: 76 },
       { name: "Mekhi Becton", pos: "G", number: 73 },
       { name: "Trey Pipkins", pos: "T", number: 79 },
