@@ -27,6 +27,7 @@ const players = [
       { name: "Ryan Nelson", pos: "T", number: 74 },
       { name: "Nash Jones", pos: "G", number: 62 },
       { name: "Corey Stewart", pos: "T", number: 65 },
+      { name: "David Sharpe", pos: "T", number: 64 },
       { name: "Ladd McConkey", pos: "WR", number: 15 },
       { name: "Keenan Allen", pos: "WR", number: 13 },
       { name: "Quentin Johnston", pos: "WR", number: 1 },
