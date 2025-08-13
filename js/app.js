@@ -91,7 +91,7 @@ const players = [
       { name: "Nikko Reed", pos: "CB", number: 46 },
       { name: "Trikweze Bridges", pos: "CB", number: 31 },
       { name: "Myles Purchase", pos: "CB", number: 49 },
-      { name: "Jordan Oladokun", pos: "CB", number: 37 },
+      { name: "Nehemiah Shelton", pos: "CB", number: 37 },
       { name: "Eric Rogers", pos: "CB", number: 39 },
       { name: "Derwin James", pos: "S", number: 3 },
       { name: "Elijah Molden", pos: "S", number: 2 },
