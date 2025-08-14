@@ -95,7 +95,7 @@ const players = [
       { name: "Eric Rogers", pos: "CB", number: 39 },
       { name: "Derwin James", pos: "S", number: 3 },
       { name: "Elijah Molden", pos: "S", number: 2 },
-      { name: "Alohi Gilman", pos: "S", number: 3 },
+      { name: "Alohi Gilman", pos: "S", number: 32 },
       { name: "RJ Mickens", pos: "S", number: 27 },
       { name: "Tony Jefferson", pos: "S", number: 23 },
       { name: "Kendall Williamson", pos: "S", number: 40 },
