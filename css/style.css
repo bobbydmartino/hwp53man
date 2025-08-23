@@ -349,3 +349,7 @@ html {
   border-radius: 8px;
   border: 2px solid rgba(0,0,0,0.1);
 }
+
+.player-card .badge { font-size: .8rem; }
+.progress { background-color: var(--medium-gray); }
+.player-card.final-locked { pointer-events: none; }
