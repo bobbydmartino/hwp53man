@@ -1,21 +1,5 @@
-// js/final-data.js
 window.FINAL_DATA = {
-  final53: [
-    "Justin Herbert",
-    "Trey Lance"
-  ],
-  finalPS: [
-    "Jalen Reagor",
-    "Kimani Vidal"
-  ],
-
-  // Optional: if present, final.js will use these instead of querying Firestore.
-  // Values are 0–100 integers (or floats if you want).
-  pickPct: {
-    "Justin Herbert": 98,
-    "Trey Lance": 37,
-    "Jalen Reagor": 22,
-    "Kimani Vidal": 41
-    // You can add more names; any missing names default to 0%.
-  }
+  "final53": ["Justin Herbert", "Trey Lance", "Joe Alt", "Mekhi Becton", "Trey Pipkins", "Zion Johnson", "Andre James", "Bradley Bozeman", "Jamaree Salyer", "Ladd McConkey", "Keenan Allen", "Quentin Johnston", "Derius Davis", "Tre' Harris", "Keandre Lambert-Smith","Austin Deculus", "Omarion Hampton", "Najee Harris", "Hassan Haskins", "Will Dissly", "Tyler Conklin", "Oronde Gadsden II", "Scott Matlock", "Tucker Fisk", "Cam Dicker", "JK Scott", "Teair Tart", "Da'Shawn Hand", "Naquon Jones", "Otito Ogbonnia", "Jamaree Caldwell", "Justin Eboigbe", "Khalil Mack", "Tuli Tuipulotu", "Bud Dupree", "Kyle Kennard", "Caleb Murphy", "Daiyan Henley", "Denzel Perryman", "Troy Dye", "Marlowe Wax", "Tarheeb Still", "Cam Hart", "Donte Jackson", "Benjamin St-Juste", "Ja'Sir Taylor", "Nikko Reed", "Eric Rogers", "Derwin James", "Elijah Molden", "Alohi Gilman", "RJ Mickens", "Kendall Williamson"],
+  "finalPS": ["DJ Uiagalelei", "Branson Taylor", "Karsen Barnhart", "Josh Kaltenberger", "David Sharpe", "Jalen Reagor", "JaQuae Jackson", "Kimani Vidal", "Nyheim Miller-Hines", "TeRah Edwards", "Garmon Randolph", "Emany Johnson", "Myles Purchase", "Rick Lovato","Harrison Hand", "Tony Jefferson"],
+  "pickPct": {"Justin Herbert":100,"Taylor Heinicke":14.6496815286624,"Trey Lance":96.1783439490446,"DJ Uiagalelei":0.636942675159236,"Joe Alt":100,"Mekhi Becton":100,"Trey Pipkins":100,"Zion Johnson":100,"Andre James":98.7261146496815,"Bradley Bozeman":100,"Jamaree Salyer":100,"Branson Taylor":80.2547770700637,"Karsen Barnhart":2.54777070063694,"Josh Kaltenberger":1.91082802547771,"Ryan Nelson":10.1910828025478,"Nash Jones":1.27388535031847,"Corey Stewart":1.27388535031847,"David Sharpe":24.203821656051,"Ladd McConkey":100,"Keenan Allen":100,"Quentin Johnston":100,"Derius Davis":100,"Jalen Reagor":3.82165605095541,"Tre' Harris":100,"Keandre Lambert-Smith":100,"Luke Grimm":0,"Brendan Rice":0,"Jaylen Johnson":0,"Dalevon Campbell":3.18471337579618,"JaQuae Jackson":0,"Omarion Hampton":100,"Najee Harris":42.0382165605096,"Hassan Haskins":95.5414012738854,"Kimani Vidal":56.0509554140127,"Nyheim Miller-Hines":7.64331210191083,"Raheim Sanders":84.0764331210191,"Jaret Patterson":0,"Will Dissly":100,"Tyler Conklin":100,"Oronde Gadsden II":100,"Scott Matlock":94.9044585987261,"Tucker Fisk":28.6624203821656,"Stevo Klotz":2.54777070063694,"Cam Dicker":100,"Josh Harris":98.7261146496815,"JK Scott":100,"Teair Tart":100,"Da'Shawn Hand":98.7261146496815,"Naquon Jones":96.1783439490446,"Otito Ogbonnia":96.8152866242038,"Jamaree Caldwell":100,"Justin Eboigbe":94.9044585987261,"Christopher Hinton":1.27388535031847,"TeRah Edwards":0,"Nesta Jade Silvera":0.636942675159236,"Khalil Mack":100,"Tuli Tuipulotu":100,"Bud Dupree":100,"Kyle Kennard":95.5414012738854,"Caleb Murphy":93.6305732484076,"Tre'Mon Morris-Brash":1.91082802547771,"Kylan Guidry":0,"Garmon Randolph":0.636942675159236,"Daiyan Henley":99.3630573248408,"Denzel Perryman":100,"Troy Dye":100,"Junior Colson":80.8917197452229,"Del'Shawn Phillips":52.8662420382166,"Kana'i Mauga":1.27388535031847,"Marlowe Wax":17.1974522292994,"Emany Johnson":0,"Tarheeb Still":100,"Cam Hart":100,"Donte Jackson":100,"Benjamin St-Juste":94.9044585987261,"Ja'Sir Taylor":87.8980891719745,"Deane Leonard":28.0254777070064,"Nikko Reed":45.2229299363057,"Eric Rogers":1.91082802547771,"Trikweze Bridges":2.54777070063694,"Myles Purchase":0,"Nehemiah Shelton":0,"Harrison Hand":0,"Derwin James":100,"Elijah Molden":100,"Alohi Gilman":100,"RJ Mickens":82.8025477707006,"Tony Jefferson":70.7006369426752,"Kendall Williamson":0,"Jaylen Jones":0}
 };
