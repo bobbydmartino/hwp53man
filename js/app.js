@@ -99,7 +99,9 @@ const players = [
       { name: "RJ Mickens", pos: "S", number: 27 },
       { name: "Tony Jefferson", pos: "S", number: 23 },
       { name: "Kendall Williamson", pos: "S", number: 40 },
-      { name: "Jaylen Jones", pos: "S", number: 35 }
+      { name: "Jaylen Jones", pos: "S", number: 35 },
+      { name: "Austin Deculus", pos: "T", number: "??"},
+      { name: "Rick Lovato", pos: "LS", number: "??"}
     ];
 const groups = ['QB', 'RB', 'WR', 'TE/FB', 'OL', 'DL', 'OLB', 'ILB', 'CB', 'S', 'ST'];
 const bucket = (pos) => {
