@@ -1,0 +1,358 @@
+/* Pro-Popper Reference — PFR-inspired styling */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #333;
+    background: #f7f7f7;
+}
+
+a { color: #034ea2; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Layout */
+.wrapper {
+    max-width: 1060px;
+    margin: 0 auto;
+    background: #fff;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    min-height: 100vh;
+}
+
+/* Header / Navbar */
+.site-header {
+    background: #034ea2;
+    color: #fff;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.site-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+.site-header h1 a { color: #fff; }
+.site-header h1 a:hover { text-decoration: none; }
+.site-header .tagline {
+    font-size: 11px;
+    color: #a0c4f0;
+    margin-left: 10px;
+}
+
+.site-nav {
+    background: #0b6abf;
+    padding: 0 20px;
+    display: flex;
+    gap: 0;
+}
+.site-nav a {
+    color: #fff;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    display: block;
+}
+.site-nav a:hover {
+    background: #034ea2;
+    text-decoration: none;
+}
+.site-nav a.active {
+    background: #034ea2;
+}
+
+/* Content area */
+.content {
+    padding: 20px;
+}
+
+/* Section headers (like PFR's blue bars) */
+.section-header {
+    background: #034ea2;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 20px 0 0 0;
+    border-radius: 2px 2px 0 0;
+}
+.section-header:first-child { margin-top: 0; }
+
+/* Player/User header */
+.player-header {
+    display: flex;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 2px solid #034ea2;
+    margin-bottom: 15px;
+}
+.player-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 4px;
+    object-fit: cover;
+    background: #e8e8e8;
+    flex-shrink: 0;
+}
+.player-photo-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 4px;
+    background: #d0d0d0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: #888;
+    flex-shrink: 0;
+}
+.player-info { flex: 1; }
+.player-info h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4px;
+}
+.player-info .handle {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+.player-info .bio {
+    color: #555;
+    font-size: 12px;
+    margin-bottom: 8px;
+    max-width: 500px;
+}
+.player-meta {
+    font-size: 12px;
+    color: #666;
+}
+.player-meta span { margin-right: 15px; }
+
+/* Badges (Pro Bowl / subscriber badges) */
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: flex-start;
+    max-width: 280px;
+    justify-content: flex-end;
+}
+.badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.badge-paid {
+    background: #ffd700;
+    color: #333;
+    border: 1px solid #e6c200;
+}
+.badge-founding {
+    background: #ffd700;
+    color: #333;
+    border: 1px solid #e6c200;
+}
+.badge-leader {
+    background: #034ea2;
+    color: #fff;
+}
+.badge-top10 {
+    background: #e8f0fe;
+    color: #034ea2;
+    border: 1px solid #034ea2;
+}
+
+/* Tables (the core of PFR) */
+table.stats {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 12px;
+}
+table.stats thead th {
+    background: #eee;
+    border-bottom: 2px solid #ccc;
+    padding: 4px 8px;
+    text-align: right;
+    font-weight: 700;
+    font-size: 11px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+}
+table.stats thead th:first-child { text-align: left; }
+table.stats thead th.section-label {
+    background: #ddd;
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #bbb;
+}
+table.stats tbody td {
+    padding: 3px 8px;
+    text-align: right;
+    border-bottom: 1px solid #eee;
+}
+table.stats tbody td:first-child { text-align: left; }
+table.stats tbody tr:nth-child(even) { background: #f9f9f9; }
+table.stats tbody tr:hover { background: #ffffcc; }
+table.stats tbody tr.totals-row {
+    font-weight: 700;
+    border-top: 2px solid #333;
+    background: #f0f0f0;
+}
+table.stats tbody tr.totals-row:hover { background: #f0f0f0; }
+
+/* Sortable columns */
+table.stats thead th.sortable { cursor: pointer; }
+table.stats thead th.sortable:hover { background: #ddd; }
+table.stats thead th.sort-asc::after { content: " \25B2"; font-size: 8px; }
+table.stats thead th.sort-desc::after { content: " \25BC"; font-size: 8px; }
+
+/* Rank column */
+td.rank { color: #888; font-size: 11px; }
+
+/* Leaders page cards */
+.leaders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+.leader-card {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.leader-card h3 {
+    background: #034ea2;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 13px;
+}
+.leader-card ol {
+    list-style: none;
+    padding: 0;
+}
+.leader-card ol li {
+    padding: 4px 10px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #f0f0f0;
+}
+.leader-card ol li:nth-child(even) { background: #f9f9f9; }
+.leader-card ol li .rank {
+    color: #888;
+    width: 20px;
+    text-align: right;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+.leader-card ol li .name { flex: 1; }
+.leader-card ol li .value { font-weight: 700; margin-left: 10px; }
+
+/* Connection/Network tables (smaller) */
+.connections-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+@media (max-width: 700px) {
+    .connections-grid { grid-template-columns: 1fr; }
+}
+
+/* Top posts list */
+.top-post {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+.top-post:last-child { border-bottom: none; }
+.top-post .post-meta {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+}
+.top-post .post-meta .reactions-count {
+    font-weight: 700;
+    color: #034ea2;
+}
+.top-post .post-body {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 6px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.top-post .post-media img,
+.top-post .post-media video {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 4px;
+    margin-top: 6px;
+}
+
+/* User directory table */
+table.directory {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+table.directory thead th {
+    background: #eee;
+    border-bottom: 2px solid #ccc;
+    padding: 5px 8px;
+    text-align: right;
+    font-weight: 700;
+    cursor: pointer;
+}
+table.directory thead th:first-child,
+table.directory thead th:nth-child(2) { text-align: left; }
+table.directory thead th:hover { background: #ddd; }
+table.directory tbody td {
+    padding: 4px 8px;
+    text-align: right;
+    border-bottom: 1px solid #eee;
+}
+table.directory tbody td:first-child,
+table.directory tbody td:nth-child(2) { text-align: left; }
+table.directory tbody tr:nth-child(even) { background: #f9f9f9; }
+table.directory tbody tr:hover { background: #ffffcc; }
+.directory .user-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* Footer */
+.site-footer {
+    border-top: 2px solid #034ea2;
+    padding: 15px 20px;
+    font-size: 11px;
+    color: #888;
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Utility */
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.muted { color: #888; }
+.bold { font-weight: 700; }
+.mt-10 { margin-top: 10px; }
+.mb-10 { margin-bottom: 10px; }
