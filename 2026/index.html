@@ -19,7 +19,7 @@
 </head>
 <body>
 
-  <!-- ===== Home/Landing View ===== -->
+  <!-- ===== Home / Auth View ===== -->
   <div id="home-view">
     <div class="hero-content text-center sunshine">
       <div class="logo-frame-container">
@@ -28,7 +28,7 @@
       <h1 class="display-3 fw-bold">53 Man Roster Tournament</h1>
       <p class="lead">2026 LA Chargers</p>
 
-      <!-- Auth: signed-out state -->
+      <!-- Auth: signed-out -->
       <div id="auth-signed-out" class="mt-4 d-none">
         <p style="color:#fff; opacity:0.85;">Sign in to make your picks.</p>
         <button id="btn-google-signin" class="btn btn-light mt-2" style="min-width:240px;">
@@ -49,14 +49,15 @@
         </form>
       </div>
 
-      <!-- Auth: signed-in state -->
+      <!-- Auth: signed-in -->
       <div id="auth-signed-in" class="mt-4 d-none">
-        <p style="color:#fff; opacity:0.85;">Signed in as <span id="signed-in-email" style="font-weight:500;"></span></p>
+        <p style="color:#fff; opacity:0.85;">Signed in as <span id="signed-in-email" style="font-weight:500;"></span> <span id="home-version" class="version-pill d-none"></span></p>
+        <p id="prior-submission-status" class="mb-2" style="color:#fff; opacity:0.85; font-size:0.95rem;"></p>
         <button id="btn-start" class="btn btn-lg btn-outline-light mt-2">Make Your Picks</button>
         <button id="btn-signout" class="btn btn-sm btn-link mt-2 d-block mx-auto" style="color:#fff;">Sign out</button>
       </div>
 
-      <!-- Auth: loading state -->
+      <!-- Auth: loading -->
       <div id="auth-loading" class="mt-4">
         <div class="spinner-border text-light" role="status"><span class="visually-hidden">Loading...</span></div>
       </div>
@@ -65,33 +66,138 @@
     </div>
   </div>
 
-  <!-- ===== Selection View (placeholder until 90-man roster is set) ===== -->
+  <!-- ===== Selection View (roster + practice squad picker) ===== -->
   <div id="selection-view" class="d-none">
     <header class="sticky-top shadow-sm" id="selection-header">
       <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center p-2">
-            <div class="d-flex align-items-center">
-                <span id="selection-user-email" class="text-muted small"></span>
-            </div>
-            <div class="counts-display text-center">
-                <span class="badge bg-roster me-2">Roster: <span id="rosterCount">0</span>/53</span>
-                <span class="badge bg-squad">P. Squad: <span id="squadCount">0</span>/16</span>
-            </div>
-            <button id="submitBtn" class="btn btn-primary btn-sm" disabled>Submit</button>
+        <div class="d-flex justify-content-between align-items-center p-2 flex-wrap" style="gap:.5rem;">
+          <div class="d-flex align-items-center" style="gap:.5rem;">
+            <span id="selection-user-email" class="text-muted small"></span>
+          </div>
+          <div class="counts-display text-center">
+            <span class="badge bg-roster me-2">Roster: <span id="rosterCount">0</span>/53</span>
+            <span class="badge bg-squad me-2">P. Squad: <span id="squadCount">0</span>/16</span>
+            <span class="badge bg-success">Record: <span id="gamesCount">0-0</span></span>
+          </div>
+          <div></div>
         </div>
         <nav id="position-nav" class="nav nav-pills flex-nowrap"></nav>
       </div>
     </header>
 
+    <div id="rosterChangeBanner" class="alert alert-warning d-none mx-3 mt-3" role="alert" style="border-left: 5px solid #ffc107;">
+      <h5 class="alert-heading">⚠️ Roster has changed since your last save</h5>
+      <div id="rosterChangeBody"></div>
+    </div>
+
     <main class="container-fluid mt-4" id="player-selection-area">
       <section id="rules-section">
-        <div class="text-center mb-5">
-          <h2 class="rules-main-title">Predictions Open When the 90-Man Roster Is Set</h2>
-          <p class="lead text-muted">Check back closer to training camp.</p>
-          <button id="backBtn" class="btn btn-secondary mt-3">Back</button>
+        <div class="text-center mb-4">
+          <h2 class="rules-main-title">2026 Tournament</h2>
+          <p class="lead text-muted">Pick 53 for the active roster, 16 for the practice squad, and predict every game.</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-lg-7">
+            <h4 class="rules-subtitle">How it works</h4>
+            <div class="rules-list">
+              <div class="rule-item">
+                <div class="rule-number">1</div>
+                <div class="rule-text">Pick your <strong>53-man active roster</strong> from the published 90-man training camp roster.</div>
+              </div>
+              <div class="rule-item">
+                <div class="rule-number">2</div>
+                <div class="rule-text">Pick your <strong>16-man practice squad</strong> from the players you didn't put on the active roster.</div>
+              </div>
+              <div class="rule-item">
+                <div class="rule-number">3</div>
+                <div class="rule-text">Predict <strong>Win or Loss</strong> for every regular season game.</div>
+              </div>
+              <div class="rule-item">
+                <div class="rule-number">4</div>
+                <div class="rule-text">You can <strong>edit your picks anytime</strong> until the deadline. Each save is recorded.</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="info-card mb-4">
+              <div class="info-card-icon">🗓️</div>
+              <div class="info-card-body">
+                <h5 class="info-card-title">Submission Deadline</h5>
+                <p class="info-card-text"><strong>TBD</strong> — set when training camp roster is finalized.</p>
+              </div>
+            </div>
+            <div class="info-card">
+              <div class="info-card-icon">⚖️</div>
+              <div class="info-card-body">
+                <h5 class="info-card-title">Tiebreakers</h5>
+                <p class="info-card-text">1st: Practice squad accuracy.<br>2nd: Schedule prediction accuracy.<br>3rd: Earlier final-edit time.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>
+  </div>
+
+  <!-- ===== Schedule View ===== -->
+  <div id="schedule-view" class="d-none">
+    <header class="sticky-top shadow-sm" id="selection-header">
+      <div class="container-fluid">
+        <div class="d-flex justify-content-center align-items-center p-2 flex-wrap" style="gap:.5rem;">
+          <div class="counts-display text-center">
+            <span class="badge bg-roster me-2">Roster: <span id="rosterCount2">0</span>/53</span>
+            <span class="badge bg-squad me-2">P. Squad: <span id="squadCount2">0</span>/16</span>
+            <span class="badge bg-success">Record: <span id="gamesCount2">0-0</span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="container mt-4">
+      <h2 class="mb-1 text-center" style="color:var(--dark-blue);">Schedule Predictions</h2>
+      <p class="text-muted mb-4 text-center">Tap the red <strong>L</strong> on the left or the green <strong>W</strong> on the right for every game.</p>
+      <div id="schedule-stack" class="schedule-stack"></div>
+    </main>
+  </div>
+
+  <!-- ===== Sticky bottom action bars ===== -->
+  <div id="selectionActionBar" class="action-bar d-none">
+    <div class="container-fluid">
+      <button class="btn btn-outline-secondary btn-lg btn-action" data-bs-toggle="modal" data-bs-target="#teamModal">View My Team</button>
+      <button id="actionPredictSchedule" class="btn btn-primary btn-lg btn-action">Predict Schedule &rarr;</button>
+      <button id="actionSubmit" class="btn btn-success btn-lg btn-action" disabled>Submit</button>
+    </div>
+  </div>
+  <div id="scheduleActionBar" class="action-bar d-none">
+    <div class="container-fluid">
+      <button class="btn btn-outline-secondary btn-lg btn-action" data-bs-toggle="modal" data-bs-target="#teamModal">View My Team</button>
+      <button id="actionBackToRoster" class="btn btn-outline-primary btn-lg btn-action">&larr; Back to Roster</button>
+      <button id="actionSubmit2" class="btn btn-success btn-lg btn-action" disabled>Submit</button>
+    </div>
+  </div>
+
+  <!-- ===== Team Modal ===== -->
+  <div class="modal fade" id="teamModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">My Team <span id="teamModalVersion" class="version-pill"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="teamModalBody">
+          <!-- populated by app.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Submitted view ===== -->
+  <div id="submitted-view" class="container mt-5 d-none">
+    <div class="text-center">
+      <h2 class="text-primary">Picks Saved! <span id="submittedVersion" class="version-pill"></span></h2>
+      <p class="lead">Your predictions are recorded. You can edit them anytime before the deadline.</p>
+      <button id="editAgainBtn" class="btn btn-secondary mt-2">Edit My Picks</button>
+      <a href="{{ '/2025/' | url }}" class="btn btn-link mt-2 d-block mx-auto">View 2025 Results</a>
+    </div>
   </div>
 
   <script>
@@ -113,6 +219,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- App scripts -->
+  <script src="{{ '/2026/js/data.js' | url }}"></script>
   <script src="{{ '/2026/js/auth.js' | url }}"></script>
   <script src="{{ '/2026/js/app.js' | url }}"></script>
 </body>
