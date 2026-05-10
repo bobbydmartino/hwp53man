@@ -18,3 +18,4 @@ serviceAccount.json
 CLAUDE.md
 .env
 .env.local
+firestore.rules

@@ -10,6 +10,7 @@
 
   if (!firebase.apps.length) firebase.initializeApp(window.firebaseConfig);
   const auth = firebase.auth();
+  const db = firebase.firestore();
 
   const EMAIL_LS_KEY = 'hwp:emailForSignIn';
 
@@ -90,6 +91,32 @@
     $btnSignout.addEventListener('click', () => auth.signOut());
   }
 
+  // --- Upsert users/{uid} profile doc on sign-in ---
+  // createdAt set on first sign-in only; lastSeenAt updated every sign-in.
+  async function upsertUserProfile(user) {
+    const ref = db.collection('users').doc(user.uid);
+    try {
+      const snap = await ref.get();
+      const ts = firebase.firestore.FieldValue.serverTimestamp();
+      if (!snap.exists) {
+        await ref.set({
+          email: user.email || null,
+          displayName: user.displayName || null,
+          createdAt: ts,
+          lastSeenAt: ts
+        });
+      } else {
+        await ref.update({
+          email: user.email || null,
+          displayName: user.displayName || null,
+          lastSeenAt: ts
+        });
+      }
+    } catch (err) {
+      console.error('[auth] upsertUserProfile failed', err);
+    }
+  }
+
   // --- State observer ---
   const userListeners = [];
   auth.onAuthStateChanged((user) => {
@@ -97,6 +124,7 @@
       setView('signed-in');
       if ($emailHeader) $emailHeader.textContent = user.email || user.displayName || '(signed in)';
       if ($selectionEmail) $selectionEmail.textContent = user.email || '';
+      upsertUserProfile(user);
     } else {
       setView('signed-out');
     }
