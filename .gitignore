@@ -16,3 +16,5 @@ ondeck/
 monofile.txt
 serviceAccount.json
 CLAUDE.md
+.env
+.env.local
