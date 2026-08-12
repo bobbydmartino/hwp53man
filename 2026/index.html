@@ -79,7 +79,7 @@
             <span class="badge bg-squad me-2">P. Squad: <span id="squadCount">0</span>/16</span>
             <span class="badge bg-success">Record: <span id="gamesCount">0-0</span></span>
           </div>
-          <div></div>
+          <div><button id="btn-home-selection" type="button" class="btn btn-sm btn-outline-secondary">&larr; Home</button></div>
         </div>
         <nav id="position-nav" class="nav nav-pills flex-nowrap"></nav>
       </div>
@@ -143,12 +143,14 @@
   <div id="schedule-view" class="d-none">
     <header class="sticky-top shadow-sm" id="selection-header">
       <div class="container-fluid">
-        <div class="d-flex justify-content-center align-items-center p-2 flex-wrap" style="gap:.5rem;">
+        <div class="d-flex justify-content-between align-items-center p-2 flex-wrap" style="gap:.5rem;">
+          <div class="header-side"></div>
           <div class="counts-display text-center">
             <span class="badge bg-roster me-2">Roster: <span id="rosterCount2">0</span>/53</span>
             <span class="badge bg-squad me-2">P. Squad: <span id="squadCount2">0</span>/16</span>
             <span class="badge bg-success">Record: <span id="gamesCount2">0-0</span></span>
           </div>
+          <div class="header-side text-end"><button id="btn-home-schedule" type="button" class="btn btn-sm btn-outline-secondary">&larr; Home</button></div>
         </div>
       </div>
     </header>
@@ -195,7 +197,10 @@
     <div class="text-center">
       <h2 class="text-primary">Picks Saved! <span id="submittedVersion" class="version-pill"></span></h2>
       <p class="lead">Your predictions are recorded. You can edit them anytime before the deadline.</p>
-      <button id="editAgainBtn" class="btn btn-secondary mt-2">Edit My Picks</button>
+      <div class="d-flex justify-content-center flex-wrap mt-2" style="gap:.5rem;">
+        <button id="editAgainBtn" class="btn btn-secondary">Edit My Picks</button>
+        <button id="btn-home-submitted" type="button" class="btn btn-outline-primary">&larr; Home</button>
+      </div>
       <a href="/2025/" class="btn btn-link mt-2 d-block mx-auto">View 2025 Results</a>
     </div>
   </div>

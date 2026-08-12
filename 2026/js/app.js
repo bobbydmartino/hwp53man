@@ -38,6 +38,7 @@
   const actionSubmit2 = $('actionSubmit2');
   const editAgainBtn  = $('editAgainBtn');
   const btnStart      = $('btn-start');
+  const homeButtons   = ['btn-home-selection', 'btn-home-schedule', 'btn-home-submitted'].map($).filter(Boolean);
   const priorStatusEl = $('prior-submission-status');
   const homeVersionEl = $('home-version');
   const submittedVersionEl = $('submittedVersion');
@@ -150,9 +151,9 @@
       header.innerHTML = `
         <h3>${group}</h3>
         <span class="pos-counts">
-          <span class="pos-count-r">${rosterPicks.length}R</span>
+          <span class="pos-count-r">${rosterPicks.length} Roster</span>
           &middot;
-          <span class="pos-count-ps">${squadPicks.length}PS</span>
+          <span class="pos-count-ps">${squadPicks.length} Practice Squad</span>
         </span>
       `;
       section.appendChild(header);
@@ -414,6 +415,21 @@
       `<p class="mb-0">We've cleared them from your picks. ${refillText}</p>`;
     banner.classList.remove('d-none');
   }
+  // Home-view status line + version pill, derived from current state.
+  function updateHomeStatus() {
+    const missTotal = missingPlayers.roster.length + missingPlayers.squad.length;
+    if (priorStatusEl) {
+      priorStatusEl.textContent = existingVersion <= 0 ? ''
+        : missTotal > 0
+          ? `Saved submission (v${existingVersion}) — ${missTotal} pick${missTotal > 1 ? 's' : ''} need refilling (roster has changed).`
+          : `You have a saved submission (v${existingVersion}). Click below to edit.`;
+    }
+    if (homeVersionEl) {
+      homeVersionEl.textContent = existingVersion > 0 ? `v${existingVersion}` : '';
+      homeVersionEl.classList.toggle('d-none', existingVersion <= 0);
+    }
+  }
+
   async function submitPicks() {
     if (!currentUser) { alert('You must be signed in.'); return; }
     if (picked.roster.length !== ROSTER_SIZE) return alert(`Roster must be ${ROSTER_SIZE}.`);
@@ -442,6 +458,7 @@
       existingVersion = newVersion;
       missingPlayers = { roster: [], squad: [] };
       renderRosterChangeBanner();
+      updateHomeStatus();
       if (submittedVersionEl) submittedVersionEl.textContent = `v${newVersion}`;
       showView('submitted');
     } catch (err) {
@@ -465,6 +482,7 @@
     if (actionSubmit)           actionSubmit.addEventListener('click', submitPicks);
     if (actionSubmit2)          actionSubmit2.addEventListener('click', submitPicks);
     if (editAgainBtn)           editAgainBtn.addEventListener('click', () => showView('selection'));
+    homeButtons.forEach(b => b.addEventListener('click', () => showView('home')));
 
     const teamModalEl = document.getElementById('teamModal');
     if (teamModalEl) teamModalEl.addEventListener('show.bs.modal', renderTeamModal);
@@ -481,8 +499,7 @@
         existingVersion = 0;
         lastCompleteRoster = false;
         lastCompleteAll = false;
-        if (priorStatusEl) priorStatusEl.textContent = '';
-        if (homeVersionEl) { homeVersionEl.textContent = ''; homeVersionEl.classList.add('d-none'); }
+        updateHomeStatus();
         afterMutation();
         renderSchedule();
         return;
@@ -490,20 +507,12 @@
       const existing = await loadExistingSubmission(user.uid);
       if (existing) {
         applyExistingSubmission(existing);
-        const missTotal = missingPlayers.roster.length + missingPlayers.squad.length;
-        if (priorStatusEl) {
-          priorStatusEl.textContent = missTotal > 0
-            ? `Saved submission (v${existingVersion}) — ${missTotal} pick${missTotal > 1 ? 's' : ''} need refilling (roster has changed).`
-            : `You have a saved submission (v${existingVersion}). Click below to edit.`;
-        }
-        if (homeVersionEl) { homeVersionEl.textContent = `v${existingVersion}`; homeVersionEl.classList.remove('d-none'); }
       } else {
         picked = { roster: [], squad: [], games: {} };
         missingPlayers = { roster: [], squad: [] };
         existingVersion = 0;
-        if (priorStatusEl) priorStatusEl.textContent = '';
-        if (homeVersionEl) { homeVersionEl.textContent = ''; homeVersionEl.classList.add('d-none'); }
       }
+      updateHomeStatus();
       // Reset transition flags so flash doesn't fire just from loading prior data
       lastCompleteRoster = picked.roster.length === ROSTER_SIZE && picked.squad.length === SQUAD_SIZE;
       lastCompleteAll = lastCompleteRoster && Object.keys(picked.games).length === GAMES_TOTAL;

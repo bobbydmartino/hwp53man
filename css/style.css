@@ -364,6 +364,10 @@ html {
   margin-bottom: .75rem;
 }
 .position-section .position-group-title h3 { margin: 0; }
+/* Balances the sticky header so the counts stay optically centered. */
+.header-side { min-width: 96px; }
+@media (max-width: 575.98px) { .header-side { min-width: 0; } }
+
 .pos-counts { font-size: .8rem; font-weight: 500; }
 .pos-counts .pos-count-r { color: var(--powder-blue); }
 .pos-counts .pos-count-ps { color: #b88600; }
