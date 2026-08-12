@@ -382,7 +382,8 @@ html {
   transition: background .15s;
 }
 .player-row:hover { background: #f5f7fa; }
-.player-row .row-left, .player-row .row-right { width: 36px; flex: none; display:flex; justify-content:center; }
+.player-row { cursor: pointer; }
+.player-row .row-actions { flex: none; display: flex; gap: .35rem; }
 .player-row .row-info { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: .5rem; }
 .player-row .player-num { color: #6c757d; font-weight: 500; font-size: .85rem; min-width: 2.4em; }
 .player-row .player-name { font-weight: 600; color: var(--dark-blue); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -393,33 +394,32 @@ html {
 .player-row.is-squad { background: #fff3cd; }
 .player-row.is-squad:hover { background: #ffeaa7; }
 
-.btn-add, .btn-remove, .btn-badge {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  border: none;
+/* Row pick buttons: outlined when available, filled when that's the player's slot. */
+.btn-pick {
+  height: 30px;
+  padding: 0 .55rem;
+  border-radius: 999px;
+  font-size: .7rem;
   font-weight: 700;
+  letter-spacing: .02em;
+  white-space: nowrap;
   cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 1rem;
   line-height: 1;
-  padding: 0;
-  transition: transform .12s, box-shadow .12s;
+  transition: background .12s, color .12s, box-shadow .12s;
+  background: #fff;
 }
-.btn-add { background: #198754; color: #fff; }
-.btn-add:hover { transform: scale(1.1); box-shadow: 0 2px 6px rgba(25,135,84,.4); }
-.btn-remove { background: #dc3545; color: #fff; }
-.btn-remove:hover { transform: scale(1.1); box-shadow: 0 2px 6px rgba(220,53,69,.4); }
+.btn-pick.roster { border: 1.5px solid var(--powder-blue); color: var(--powder-blue); }
+.btn-pick.roster:hover { background: var(--powder-blue); color: #fff; }
+.btn-pick.roster.active { background: var(--powder-blue); color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.45); }
+.btn-pick.squad { border: 1.5px solid #b88600; color: #b88600; }
+.btn-pick.squad:hover { background: var(--sunshine-gold); color: var(--dark-blue); border-color: var(--sunshine-gold); }
+.btn-pick.squad.active { background: var(--sunshine-gold); color: var(--dark-blue); border-color: var(--sunshine-gold); box-shadow: inset 0 0 0 2px rgba(255,255,255,.45); }
 
-.btn-badge {
-  width: auto; padding: 0 .65rem; height: 28px;
-  font-size: .75rem; letter-spacing: .03em;
-  border-radius: 999px;
+@media (max-width: 575.98px) {
+  .player-row { padding: .5rem .5rem; gap: .4rem; }
+  .btn-pick { padding: 0 .4rem; font-size: .65rem; height: 28px; }
 }
-.btn-badge.r { background: var(--powder-blue); color: #fff; }
-.btn-badge.r:hover { background: #006fa8; }
-.btn-badge.ps { background: var(--sunshine-gold); color: var(--dark-blue); }
-.btn-badge.ps:hover { background: #e6ac00; }
-.btn-badge:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
 
 .available-divider {
   font-size: .75rem;

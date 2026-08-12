@@ -98,25 +98,16 @@
     const name = `<span class="player-name">${player.name}</span>`;
     const posTag = `<span class="player-pos-tag">${player.pos}</span>`;
 
-    if (role === 'R' || role === 'PS') {
-      const cls = role === 'R' ? 'is-roster' : 'is-squad';
-      const badgeCls = role === 'R' ? 'r' : 'ps';
-      const badgeLabel = role === 'R' ? 'R' : 'PS';
-      const swapTitle = role === 'R' ? 'Move to practice squad' : 'Move to roster';
-      return `
-        <div class="player-row ${cls}" data-player-index="${player.index}">
-          <div class="row-left"></div>
-          <div class="row-info">${num} ${name} ${posTag}</div>
-          <button type="button" class="btn-badge ${badgeCls}" data-action="swap" title="${swapTitle}">${badgeLabel}</button>
-          <div class="row-right"><button type="button" class="btn-remove" data-action="remove" title="Remove">−</button></div>
-        </div>
-      `;
-    }
+    const cls = role === 'R' ? ' is-roster' : role === 'PS' ? ' is-squad' : '';
+    const rTitle = role === 'R' ? 'Remove from roster' : 'Add to roster';
+    const sTitle = role === 'PS' ? 'Remove from practice squad' : 'Move to practice squad';
     return `
-      <div class="player-row" data-player-index="${player.index}">
-        <div class="row-left"><button type="button" class="btn-add" data-action="add" title="Add">+</button></div>
+      <div class="player-row${cls}" data-player-index="${player.index}">
+        <div class="row-actions">
+          <button type="button" class="btn-pick roster${role === 'R' ? ' active' : ''}" data-action="roster" title="${rTitle}">Roster</button>
+          <button type="button" class="btn-pick squad${role === 'PS' ? ' active' : ''}" data-action="squad" title="${sTitle}">Practice Squad</button>
+        </div>
         <div class="row-info">${num} ${name} ${posTag}</div>
-        <div class="row-right"></div>
       </div>
     `;
   }
@@ -141,6 +132,9 @@
         else if (role === 'PS') squadPicks.push(p);
         else available.push(p);
       }
+      // Picked players sit in the order they were clicked, not roster order.
+      rosterPicks.sort((a, b) => picked.roster.indexOf(a.index) - picked.roster.indexOf(b.index));
+      squadPicks.sort((a, b) => picked.squad.indexOf(a.index) - picked.squad.indexOf(b.index));
 
       const section = document.createElement('section');
       section.className = 'position-section';
@@ -170,15 +164,17 @@
     }
 
     playerSelectionArea.querySelectorAll('.player-row').forEach(row => {
-      row.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const action = btn.dataset.action;
-          const idx = parseInt(row.dataset.playerIndex, 10);
-          if (action === 'add') addPlayer(idx);
-          else if (action === 'remove') removePlayer(idx);
-          else if (action === 'swap') swapPlayer(idx);
-        });
+      row.addEventListener('click', (e) => {
+        const idx = parseInt(row.dataset.playerIndex, 10);
+        const btn = e.target.closest('button[data-action]');
+        if (btn) {
+          if (btn.dataset.action === 'roster') toggleRoster(idx);
+          else toggleSquad(idx);
+          return;
+        }
+        // Clicking the row itself adds to the roster. Already-picked rows only
+        // respond to their buttons, so a stray tap can't drop someone.
+        if (!pickedRole(idx)) toggleRoster(idx);
       });
     });
   }
@@ -314,29 +310,25 @@
   }
 
   // --- Mutations ---
-  function addPlayer(idx) {
-    if (pickedRole(idx)) return;
-    if (picked.roster.length < ROSTER_SIZE) picked.roster.push(idx);
-    else if (picked.squad.length < SQUAD_SIZE) picked.squad.push(idx);
-    else { wiggleRow(idx); return; }
-    afterMutation();
-  }
   function removePlayer(idx) {
     picked.roster = picked.roster.filter(i => i !== idx);
     picked.squad  = picked.squad.filter(i => i !== idx);
     afterMutation();
   }
-  function swapPlayer(idx) {
-    const role = pickedRole(idx);
-    if (role === 'R') {
-      if (picked.squad.length >= SQUAD_SIZE) { wiggleRow(idx, 'Squad full'); return; }
-      picked.roster = picked.roster.filter(i => i !== idx);
-      picked.squad.push(idx);
-    } else if (role === 'PS') {
-      if (picked.roster.length >= ROSTER_SIZE) { wiggleRow(idx, 'Roster full'); return; }
-      picked.squad = picked.squad.filter(i => i !== idx);
-      picked.roster.push(idx);
-    }
+  // Roster button: on the roster already -> drop them; otherwise claim them.
+  function toggleRoster(idx) {
+    if (pickedRole(idx) === 'R') { removePlayer(idx); return; }
+    if (picked.roster.length >= ROSTER_SIZE) { wiggleRow(idx, 'Roster full'); return; }
+    picked.squad = picked.squad.filter(i => i !== idx);
+    picked.roster.push(idx);
+    afterMutation();
+  }
+  // Practice squad button: same toggle, other list.
+  function toggleSquad(idx) {
+    if (pickedRole(idx) === 'PS') { removePlayer(idx); return; }
+    if (picked.squad.length >= SQUAD_SIZE) { wiggleRow(idx, 'Practice squad full'); return; }
+    picked.roster = picked.roster.filter(i => i !== idx);
+    picked.squad.push(idx);
     afterMutation();
   }
   function wiggleRow(idx, msg) {
