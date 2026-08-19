@@ -30,7 +30,7 @@ window.HWP_PLAYERS = [
   { name: "Derius Davis", pos: "WR", number: 12 },
   { name: "KeAndre Lambert-Smith", pos: "WR", number: 84 },
   { name: "Brenen Thompson", pos: "WR", number: 89 },
-  { name: "Luke Grimm", pos: "WR", number: 87 },
+  { name: "Liam Clifford", pos: "WR", number: 39 },
   { name: "Dalevon Campbell", pos: "WR", number: 81 },
   { name: "JaQuae Jackson", pos: "WR", number: 82 },
   { name: "Devonte Ross", pos: "WR", number: 24 },
