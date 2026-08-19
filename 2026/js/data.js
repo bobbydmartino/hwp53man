@@ -70,7 +70,6 @@ window.HWP_PLAYERS = [
   { name: "Nadame Tucker", pos: "OLB", number: 56 },
   { name: "Garmon Randolph", pos: "OLB", number: 97 },
   { name: "Andre Carter", pos: "OLB", number: 51 },
-  { name: "Nadame Tucker", pos: "OLB", number: 56 },
   { name: "Daiyan Henley", pos: "ILB", number: 0 },
   { name: "Denzel Perryman", pos: "ILB", number: 6 },
   { name: "Troy Dye", pos: "ILB", number: 43 },
