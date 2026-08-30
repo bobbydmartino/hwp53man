@@ -124,6 +124,8 @@ window.HWP_SCHEDULE = [
 // --- Constants ---
 window.HWP_ROSTER_SIZE = 53;
 window.HWP_SQUAD_SIZE = 16;
+// Deadline passed (Aug 29, 2026). Flip to false to reopen submissions.
+window.HWP_LOCKED = true;
 window.HWP_GROUPS = ['QB', 'RB', 'WR', 'TE/FB', 'FB', 'OL', 'DL', 'OLB', 'ILB', 'CB', 'S', 'ST'];
 window.HWP_BUCKET = function (pos) {
   if (['T', 'G', 'C', 'IOL'].includes(pos)) return 'OL';
