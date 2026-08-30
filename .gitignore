@@ -19,3 +19,7 @@ CLAUDE.md
 .env
 .env.local
 firestore.rules
+# 2026 exports
+2026_export.json
+2026_graded.json
+2026_graded.csv

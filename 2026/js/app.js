@@ -13,6 +13,7 @@
   const ROSTER_SIZE = window.HWP_ROSTER_SIZE;
   const SQUAD_SIZE  = window.HWP_SQUAD_SIZE;
   const GAMES_TOTAL = schedule.length;
+  const LOCKED = !!window.HWP_LOCKED;
 
   // --- State ---
   let currentUser = null;
@@ -69,6 +70,7 @@
     return null;
   }
   function submitButtonLabel() {
+    if (LOCKED) return 'Locked';
     return existingVersion > 0 ? `Update (v${existingVersion + 1})` : 'Submit';
   }
   function flash(el) {
@@ -265,6 +267,7 @@
   }
 
   function handleGamePick(e) {
+    if (LOCKED) return;
     const side = e.currentTarget;
     const row  = side.closest('.game-row');
     const week = parseInt(row.dataset.week, 10);
@@ -296,7 +299,7 @@
 
     [actionSubmit, actionSubmit2].forEach(b => {
       if (!b) return;
-      b.disabled = !completeAll || !currentUser;
+      b.disabled = LOCKED || !completeAll || !currentUser;
       b.textContent = submitButtonLabel();
     });
 
@@ -317,6 +320,7 @@
   }
   // Roster button: on the roster already -> drop them; otherwise claim them.
   function toggleRoster(idx) {
+    if (LOCKED) return;
     if (pickedRole(idx) === 'R') { removePlayer(idx); return; }
     if (picked.roster.length >= ROSTER_SIZE) { wiggleRow(idx, 'Roster full'); return; }
     picked.squad = picked.squad.filter(i => i !== idx);
@@ -325,6 +329,7 @@
   }
   // Practice squad button: same toggle, other list.
   function toggleSquad(idx) {
+    if (LOCKED) return;
     if (pickedRole(idx) === 'PS') { removePlayer(idx); return; }
     if (picked.squad.length >= SQUAD_SIZE) { wiggleRow(idx, 'Practice squad full'); return; }
     picked.roster = picked.roster.filter(i => i !== idx);
@@ -411,11 +416,16 @@
   function updateHomeStatus() {
     const missTotal = missingPlayers.roster.length + missingPlayers.squad.length;
     if (priorStatusEl) {
-      priorStatusEl.textContent = existingVersion <= 0 ? ''
+      priorStatusEl.textContent = LOCKED
+        ? (existingVersion > 0
+            ? `Submissions are locked. Your v${existingVersion} picks are final.`
+            : 'Submissions are locked. The deadline has passed.')
+        : existingVersion <= 0 ? ''
         : missTotal > 0
           ? `Saved submission (v${existingVersion}) — ${missTotal} pick${missTotal > 1 ? 's' : ''} need refilling (roster has changed).`
           : `You have a saved submission (v${existingVersion}). Click below to edit.`;
     }
+    if (LOCKED && btnStart) btnStart.textContent = existingVersion > 0 ? 'View My Picks' : 'View Picks (Locked)';
     if (homeVersionEl) {
       homeVersionEl.textContent = existingVersion > 0 ? `v${existingVersion}` : '';
       homeVersionEl.classList.toggle('d-none', existingVersion <= 0);
@@ -423,6 +433,7 @@
   }
 
   async function submitPicks() {
+    if (LOCKED) { alert('Submissions are locked.'); return; }
     if (!currentUser) { alert('You must be signed in.'); return; }
     if (picked.roster.length !== ROSTER_SIZE) return alert(`Roster must be ${ROSTER_SIZE}.`);
     if (picked.squad.length !== SQUAD_SIZE) return alert(`Practice squad must be ${SQUAD_SIZE}.`);
