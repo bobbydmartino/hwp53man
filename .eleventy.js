@@ -7,11 +7,10 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addPassthroughCopy("2025/js");
   eleventyConfig.addPassthroughCopy("2026/js");
-  eleventyConfig.addPassthroughCopy("CNAME");
   eleventyConfig.addPassthroughCopy("reference");
 
 
-  const pathPrefix = "/";
+  const pathPrefix = "/hwp53man/";
 
   return {
     dir: {
