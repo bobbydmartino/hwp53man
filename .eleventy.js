@@ -7,7 +7,6 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy("img");
   eleventyConfig.addPassthroughCopy("2025/js");
   eleventyConfig.addPassthroughCopy("2026/js");
-  eleventyConfig.addGlobalData("env", process.env);
   eleventyConfig.addPassthroughCopy("CNAME");
   eleventyConfig.addPassthroughCopy("reference");
 

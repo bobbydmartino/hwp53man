@@ -1,12 +1,5 @@
 // js/app.js
 
-// --- Firebase Configuration ---
-// This remains the same as your original file
-const firebaseConfig = window.firebaseConfig;
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
 // --- Data & State ---
 // Unchanged from original
 const players = [
@@ -307,31 +300,7 @@ function handlePlayerClick(event) {
 // --- Backend and Stats Logic ---
 
 function submitPicks() {
-    const name = nameInput.value.trim();
-    if (!name) return alert('Enter your name or handle');
-    if (picked.roster.length !== 53 || picked.squad.length !== 16)
-        return alert('Must pick exactly 53 for the roster & 16 for the practice squad.');
-    
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Submitting...';
-
-    const data = {
-        name,
-        date: firebase.firestore.FieldValue.serverTimestamp(),
-        roster: picked.roster.map(i => players[i].name),
-        squad: picked.squad.map(i => players[i].name)
-    };
-    
-    db.collection('submissions').add(data)
-      .then(() => {
-          showStats();
-      })
-      .catch(e => {
-          console.error(e);
-          alert('An error occurred while submitting. Please try again.');
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Submit';
-      });
+    alert('The 2025 tournament is closed.');
 }
 
 function showStats() {
@@ -349,9 +318,9 @@ async function loadAndRenderStats() {
     statsContent.innerHTML = '<p class="text-center">Loading stats...</p>';
 
     try {
-        const snap = await db.collection('submissions').get();
-        const submissions = snap.docs.map(doc => doc.data());
-        const total = submissions.length;
+        // Frozen aggregate counts (see pull_2025.py).
+        const stats = window.HWP_2025_STATS;
+        const total = stats.total;
 
         if (total === 0) {
             statsContent.innerHTML = '<p class="text-center">No submissions yet. Be the first!</p>';
@@ -362,29 +331,16 @@ async function loadAndRenderStats() {
         const rosterCount = {};
         const squadCount = {};
         players.forEach(p => {
-            rosterCount[p.name] = 0;
-            squadCount[p.name] = 0;
-        });
-        submissions.forEach(({ roster, squad }) => {
-            roster.forEach(n => rosterCount[n]++);
-            squad.forEach(n => squadCount[n]++);
+            rosterCount[p.name] = stats.roster[p.name] || 0;
+            squadCount[p.name] = stats.squad[p.name] || 0;
         });
 
-        // Calculate average picks per position group
+        // Average picks per position group
         const groupSums = {};
         groups.forEach(g => groupSums[g] = 0);
-        const nameToBucket = players.reduce((map, p) => {
-            map[p.name] = bucket(p.pos);
-            return map;
-        }, {});
-        submissions.forEach(sub => {
-            const counts = {};
-            groups.forEach(g => counts[g] = 0);
-            sub.roster.forEach(name => {
-                const g = nameToBucket[name];
-                if (g) counts[g]++;
-            });
-            groups.forEach(g => groupSums[g] += counts[g]);
+        Object.entries(stats.roster).forEach(([name, n]) => {
+            const p = players.find(p => p.name === name);
+            if (p) groupSums[bucket(p.pos)] += n;
         });
 
         // --- Render Stats Tables ---
