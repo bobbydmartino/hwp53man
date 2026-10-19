@@ -1,6 +1,6 @@
 // js/final.js
 // Final mode: Freeze cards, force blue (53) / gold (PS) highlights by exact strings,
-// and show pick percentages (manual override via FINAL_DATA.pickPct or auto from Firestore).
+// and show pick percentages (manual override via FINAL_DATA.pickPct or frozen HWP_2025_STATS).
 //
 // Load this AFTER app.js in index.html:
 //   <script src="{{ '/js/app.js' | url }}"></script>
@@ -224,46 +224,17 @@
     });
   }
 
-  // Auto percentages from Firestore if no manual map.
+  // Percentages from frozen 2025 counts (see pull_2025.py) if no manual map.
   function paintPercentagesAuto() {
-    try {
-      // Reuse app if already initialized by your app.js.
-      const app =
-        (firebase.apps && firebase.apps.length) ?
-          firebase.apps[0] :
-          firebase.initializeApp(window.firebaseConfig);
-
-      const db = firebase.firestore(app);
-
-      db.collection("submissions")
-        .get()
-        .then((snap) => {
-          const total = snap.size || 1;
-          const counts = new Map();
-          const inc = (s) => {
-            if (!s) return;
-            const k = norm(s);
-            counts.set(k, (counts.get(k) || 0) + 1);
-          };
-
-          snap.forEach((doc) => {
-            const d = doc.data() || {};
-            const roster = Array.isArray(d.roster) ? d.roster : [];
-            const ps = Array.isArray(d.practiceSquad) ? d.practiceSquad : [];
-            roster.forEach(inc);
-            ps.forEach(inc);
-          });
-
-          document.querySelectorAll(".player-card").forEach((card) => {
-            const n = getCardName(card);
-            const pct = ((counts.get(n) || 0) / total) * 100;
-            paintPctValue(card, pct);
-          });
-        })
-        .catch((e) => console.error("Failed to load submissions for percentages", e));
-    } catch (e) {
-      console.error("Firebase init failed in final mode", e);
-    }
+    const stats = window.HWP_2025_STATS;
+    if (!stats) return;
+    const total = stats.total || 1;
+    const counts = new Map();
+    Object.entries(stats.roster).forEach(([name, n]) => counts.set(norm(name), n));
+    document.querySelectorAll(".player-card").forEach((card) => {
+      const n = getCardName(card);
+      paintPctValue(card, ((counts.get(n) || 0) / total) * 100);
+    });
   }
 
   // Ready sequence.
